@@ -12,7 +12,7 @@ row1 = ['|', '|', '|', '|', '|', '|', '|']
 ##5
 row2 = ['|', '|', '|', '|', '|']
 ##3
-row3 = ['|', '|', '|' ,"" ,"" ,"" ]
+row3 = ['|', '|', '|' ]
 ##
 ##
 
@@ -51,8 +51,6 @@ def minimax_decision(state, game):
                       lambda a: max_value(game.result(state, a)))
 
 
-
-
 #CLASS NIMGAME
 
 class Game():
@@ -60,9 +58,6 @@ class Game():
     def __init__(self, sticks, player):
 
         update(self, sticks = sticks)
-        #moves = if_(sticks > 3, [x for x in range(1, 4)],[x for x in range(1,sticks)])
-
-
 
         if (sticks > 3):
 
@@ -93,11 +88,6 @@ class Game():
 
             return struct
 
-
-            #return Struct(to_move=if_(state.to_move == 'H', 'M', 'H'), utility = state.utility, sticks = state.sticks,
-                      #moves = state.moves)
-        #moves = if_(state.sticks - move > 3, [x for x in range(1, 4)],[x for x in range(1,state.sticks - move)])
-
         if(state.sticks - move > 3):
 
             moves = [x for x in range(1,4)]
@@ -107,13 +97,6 @@ class Game():
         else:
 
             moves = [x for x in range(1, state.sticks - move)]
-
-
-
-            #print(move)
-
-        #return Struct(to_move=if_(state.to_move == 'H', 'M', 'H'), utility = self.compute_utility(state, move), sticks = state.sticks - move,
-        #             moves = moves)
 
         struct = Struct(to_move=if_(state.to_move == 'H', 'M', 'H'),
 
@@ -140,7 +123,6 @@ class Game():
 
                 return -1
 
-            #return if_(state.to_move == 'M', 1, -1)
         else:
             return 0
 
@@ -166,11 +148,10 @@ class Game():
 
 def qrow():
     #input row
-    return num_or_str(input('input row: '))
+    return num_or_str(input('input row(1 or 2 or 3): '))
 
 def query_player(game, state):
     "Make a move by querying standard input."
-    #game.display(state)
     return num_or_str(input('Please, do a moviment:  '))
 
 
@@ -180,8 +161,9 @@ class Node:
         self.children = []
         self.movevalue = 0
 
-#make tree using minimax
 
+
+#make tree using minimax
 def makeTreeMinimax(root, game):
 
     player = game.to_move(root.state)
@@ -324,21 +306,27 @@ def main_play(game):
 
     while(not game.terminal_test(state)):
         filas=qrow()
+
         move = query_player(game,state)
         newstate1 = game.result(state, move)
         game.display(newstate1)
-        tableton(filas,move,state)
 
+        if ((row1 != [] and state.sticks != 0) or (row2 != [] and state.sticks != 0) or (
+                row3 != [] and state.sticks != [0])):
+            tableton(filas, move)
 
         if game.terminal_test(newstate1):
             user = if_(newstate1.utility == 1, 'I', 'You')
             print ('%s Win !!' %user)
             break
+
         mymove = minimax_decision(newstate1,game)
 
         print ("My Move : %d" % mymove)
         newstate2 = game.result(newstate1, mymove)
-        tableton(filas,mymove,state)
+
+        #print(newstate2)
+
         game.display(newstate2)
 
         if game.terminal_test(newstate2):
@@ -346,17 +334,26 @@ def main_play(game):
             print ('%s Win !!' %user)
             break
         state = newstate2
+        #print(state.moves)
+
+        if( (row1 != [] and state.moves == 1) or (row2 != [] and state.moves ==2) or (row3 != [] and state.moves==3)):
+
+            tableton(filas,mymove)
+
+        if ((row1 != [] and state.utility != 0) or (row2 != [] and state.moves != 0) or (
+                row3 != [] and state.moves != 0))
+
         
-def tableton(qrow,move,state):
+def tableton(qrow,moves):
     fseleccionada=qrow
-    if(fseleccionada==1 and state.sticks != 0):
-        for i in range(0,move):
+    if(fseleccionada==1 and row1 != [] ):
+        for i in range(0,moves):
             row1.pop()
-    if(fseleccionada==2 and state.sticks != 0):
-        for i in range(0,move):
+    if(fseleccionada==2 and row2 != [] ):
+        for i in range(0,moves):
             row2.pop()
-    if(fseleccionada==3 and state.sticks != 12):
-        for i in range(0,move):
+    if(fseleccionada==3 and row3 != [] ):
+        for i in range(0,moves):
             row3.pop()
     print(*row1)
     print(*row2)

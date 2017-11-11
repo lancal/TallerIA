@@ -65,7 +65,7 @@ def startGame():
 
             root = main.Node(game.initial)
 
-            #newroot = main.makeTreeMinimax(root,game)
+            newroot = main.makeTreeMinimax(root,game)
 
             #main.representTree(newroot, game)
 
@@ -77,7 +77,7 @@ def startGame():
 
             root = main.Node(game.initial)
 
-            #newroot = main.makeTreeAplhaBeta(root,game)
+            newroot = main.makeTreeAplhaBeta(root,game)
 
 
 
