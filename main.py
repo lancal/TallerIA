@@ -246,6 +246,77 @@ def representTree(root,game):
     mygraph.write_png(nameofgraph)
 
 
+def makeTreeAplhaBeta(root,game):
+#make tree using alphabeta pruning
+    player = game.to_move(root.state)
+
+    def max_value(node, state, alpha, beta):
+        if game.terminal_test(state):
+            return game.utility(state, player)
+        v = -infinity
+        for a in game.actions(state):
+            node.children.append(Node(game.result(state, a)))
+            v = max(v, min_value(node.children[a - 1], game.result(state, a), alpha, beta))
+            if v >= beta:
+                node.state.utility = v
+                return v
+            alpha = max(alpha, v)
+        node.state.utility = v
+        return v
+
+    def min_value(node, state, alpha, beta):
+        if game.terminal_test(state):
+            return game.utility(state, player)
+        v = infinity
+        for a in game.actions(state):
+            node.children.append(Node(game.result(state, a)))
+            v = min(v, max_value(node.children[a - 1], game.result(state, a), alpha, beta))
+            if v <= alpha:
+                node.state.utility = v
+                return v
+            beta = min(beta, v)
+        node.state.utility = v
+        return v
+
+    if root.state.to_move == 'M':
+        max_value(root, root.state, -infinity, infinity)
+    else:
+        min_value(root, root.state, -infinity, infinity)
+    return root
+
+
+def representTreeAlpha(root,game):
+    id = 1
+    mygraph = pydot.Dot(graph_type= 'digraph')
+    stack = []
+    stackgraph = []
+    parent = pydot.Node(id, style='filled', fillcolor= if_(root.state.to_move == 'M', 'red', 'blue'),label = root.state.sticks,
+                        xlabel = root.state.utility)
+    stackgraph.append(parent)
+    stack.append(root)
+    while stack != []:
+        if id > 200:
+            break
+        node = stack.pop(0)
+        nodefromstackgraph = stackgraph.pop(0)
+        id+=1
+        mygraph.add_node(parent)
+        if node.children != []:
+            for i in node.state.moves:
+                if i <= len(node.children):
+                    childstate = node.children[i-1].state
+                    stack.append(node.children[i-1])
+                    nodegraph = pydot.Node(id, style='filled', fillcolor= if_(childstate.to_move == 'M', 'red', 'blue'),label = childstate.sticks,
+                                           xlabel = childstate.utility)
+                    stackgraph.append(nodegraph)
+                    id+=1
+                    mygraph.add_node(nodegraph)
+                    edge = pydot.Edge(nodefromstackgraph, nodegraph, label = i)
+                    mygraph.add_edge(edge)
+    nameofgraph = 'game%d-alha-beta.png' % game.initial.sticks
+    mygraph.write_png(nameofgraph)
+
+
 
 def main_play(game):
 
