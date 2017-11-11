@@ -339,10 +339,6 @@ def main_play(game):
         if( (row1 != [] and state.moves == 1) or (row2 != [] and state.moves ==2) or (row3 != [] and state.moves==3)):
 
             tableton(filas,mymove)
-
-        if ((row1 != [] and state.utility != 0) or (row2 != [] and state.moves != 0) or (
-                row3 != [] and state.moves != 0))
-
         
 def tableton(qrow,moves):
     fseleccionada=qrow
