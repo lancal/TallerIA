@@ -12,7 +12,7 @@ row1 = ['|', '|', '|', '|', '|', '|', '|']
 ##5
 row2 = ['|', '|', '|', '|', '|']
 ##3
-row3 = ['|', '|', '|' ]
+row3 = ['|', '|', '|' ,"" ,"" ,"" ]
 ##
 ##
 
@@ -323,11 +323,11 @@ def main_play(game):
     state = game.initial
 
     while(not game.terminal_test(state)):
-        #filas=qrow()
+        filas=qrow()
         move = query_player(game,state)
         newstate1 = game.result(state, move)
         game.display(newstate1)
-        #tableton(filas,move)
+        tableton(filas,move,state)
 
 
         if game.terminal_test(newstate1):
@@ -338,7 +338,7 @@ def main_play(game):
 
         print ("My Move : %d" % mymove)
         newstate2 = game.result(newstate1, mymove)
-        #tableton(filas,move)
+        tableton(filas,mymove,state)
         game.display(newstate2)
 
         if game.terminal_test(newstate2):
@@ -347,15 +347,15 @@ def main_play(game):
             break
         state = newstate2
         
-def tableton(qrow,move):
+def tableton(qrow,move,state):
     fseleccionada=qrow
-    if(fseleccionada==1):
+    if(fseleccionada==1 and state.sticks != 0):
         for i in range(0,move):
             row1.pop()
-    if(fseleccionada==2):
+    if(fseleccionada==2 and state.sticks != 0):
         for i in range(0,move):
             row2.pop()
-    if(fseleccionada==3):
+    if(fseleccionada==3 and state.sticks != 12):
         for i in range(0,move):
             row3.pop()
     print(*row1)
